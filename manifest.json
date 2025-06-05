@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT JP BIG Button",
+  "version": "1.0",
+  "description": "操作を補助する日本語のデカいボタン",
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["content_script.js"]
+    }
+  ]
+}
