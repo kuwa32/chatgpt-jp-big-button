@@ -1,5 +1,5 @@
 appConsoleLog  = (value) => {
-    if(true){
+    if(false){
         console.log(value);
     }else{
 
@@ -26,6 +26,17 @@ function clearTextarea() {
 }
 
 function sendQuestion(){
+    const editableDiv = document.querySelector('#prompt-textarea');
+    if (!editableDiv) {
+        appConsoleLog("prompt-textareaが見つかりません");
+        return;
+    }
+    // 中身が空なら送信しない
+    if (!editableDiv.innerText.trim()) {
+        appConsoleLog("prompt-textareaが空なので送信しません");
+        return;
+    }
+
     const sendButton = document.querySelector('button[data-testid="send-button"]');
     appConsoleLog("質問を送信");
     sendButton.click();
