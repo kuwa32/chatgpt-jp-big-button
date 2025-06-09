@@ -20,6 +20,14 @@ function clearTextarea() {
         editableDiv.dispatchEvent(new Event('input', { bubbles: true }));
 
         appConsoleLog("editableDivをクリアしました");
+
+        // マイクがONならOFFにする
+        if(isMicOn()){
+          appConsoleLog("マイクがONだったので、OFFにした.");
+          const micButton = document.querySelector("#vc-record-button");
+          micButton.click();
+          setTimeout(updateBigMicButton, 300);
+        }        
         return;
     }
     appConsoleLog("editableDivが無かったです");
@@ -89,10 +97,10 @@ function updateBigMicButton() {
     const button = document.getElementById("big-mic-button");
     if (!button) return;
     if (isMicOn()) {
-        button.innerText = "マイクはONです";
-        button.style.backgroundColor = "rgb(128,128,128)";
+        button.innerHTML = "マイクを<br>OFFにする";
+        button.style.backgroundColor = "rgb(255,128,128)";
     } else {
-        button.innerText = "マイクをONにする";
+        button.innerHTML = "マイクを<br>ONにする";
         button.style.backgroundColor = "rgb(128,128,255)";
     }
 }
@@ -142,24 +150,26 @@ function addClearButton() {
 
   const button = document.createElement("button");
   button.id = "clear-textarea-button";
-  button.innerText = "入力を取り消す";
+  button.innerHTML = "入力を<br>取り消す"; // 2行表示
   // サイズ・位置・スタイル
   button.style.position = "fixed";
-  button.style.bottom = "20px";         // 下から20px
-  button.style.left = "20px";          // 右から20px
+  button.style.bottom = "20px";
+  button.style.left = "20px";
   button.style.zIndex = "9999";
-  button.style.width = "300px";         // 横300px
-  button.style.height = "300px";        // 縦300px
+  button.style.width = "300px";
+  button.style.height = "300px";
   button.style.backgroundColor = "red";
   button.style.color = "white";
   button.style.border = "none";
-  button.style.borderRadius = "20px";   // 角丸を大きめに
-  button.style.fontSize = "2rem";       // 大きな文字
+  button.style.borderRadius = "20px";
+  button.style.fontSize = "2rem";
   button.style.cursor = "pointer";
   button.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.3)";
   button.style.display = "flex";
   button.style.alignItems = "center";
   button.style.justifyContent = "center";
+  button.style.textAlign = "center"; // 中央揃え
+  button.style.flexDirection = "column"; // 縦方向に配置
 
   button.addEventListener("click", clearTextarea);
 
@@ -171,24 +181,26 @@ function addBigSendButton() {
 
   const button = document.createElement("button");
   button.id = "big-send-button";
-  button.innerText = "質問を送る";
+  button.innerHTML = "質問を<br>送る"; // 2行表示
   // サイズ・位置・スタイル
   button.style.position = "fixed";
-  button.style.bottom = "20px";         // 下から20px
-  button.style.right = "20px";          // 右から20px
+  button.style.bottom = "20px";
+  button.style.right = "20px";
   button.style.zIndex = "9999";
-  button.style.width = "300px";         // 横300px
-  button.style.height = "300px";        // 縦300px
+  button.style.width = "300px";
+  button.style.height = "300px";
   button.style.backgroundColor = "blue";
   button.style.color = "white";
   button.style.border = "none";
-  button.style.borderRadius = "20px";   // 角丸を大きめに
-  button.style.fontSize = "2rem";       // 大きな文字
+  button.style.borderRadius = "20px";
+  button.style.fontSize = "2rem";
   button.style.cursor = "pointer";
   button.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.3)";
   button.style.display = "flex";
   button.style.alignItems = "center";
   button.style.justifyContent = "center";
+  button.style.textAlign = "center"; // 中央揃え
+  button.style.flexDirection = "column"; // 縦方向に配置
 
   button.addEventListener("click", sendQuestion);
 
@@ -200,24 +212,26 @@ function addBigMicButton() {
 
   const button = document.createElement("button");
   button.id = "big-mic-button";
-  button.innerText = "マイクをON";
+  button.innerHTML = "マイクを<br>ONにする"; // 2行表示（初期値）
   // サイズ・位置・スタイル
   button.style.position = "fixed";
-  button.style.bottom = "340px";         // 下から20px
-  button.style.right = "20px";          // 右から20px
+  button.style.bottom = "340px";
+  button.style.right = "20px";
   button.style.zIndex = "9999";
-  button.style.width = "300px";         // 横300px
-  button.style.height = "300px";        // 縦300px
+  button.style.width = "300px";
+  button.style.height = "300px";
   button.style.backgroundColor = "orange";
   button.style.color = "white";
   button.style.border = "none";
-  button.style.borderRadius = "20px";   // 角丸を大きめに
-  button.style.fontSize = "2rem";       // 大きな文字
+  button.style.borderRadius = "20px";
+  button.style.fontSize = "2rem";
   button.style.cursor = "pointer";
   button.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.3)";
   button.style.display = "flex";
   button.style.alignItems = "center";
   button.style.justifyContent = "center";
+  button.style.textAlign = "center"; // 中央揃え
+  button.style.flexDirection = "column"; // 縦方向に配置
 
   button.addEventListener("click", appMicToggle);
 
