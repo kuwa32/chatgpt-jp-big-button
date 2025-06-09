@@ -1,31 +1,9 @@
-  appConsoleLog  = (value) => {
-      if(false){
-          appConsoleLog(value);
-      }else{
+appConsoleLog  = (value) => {
+    if(true){
+        console.log(value);
+    }else{
 
-      }
-  }
-
-
-// テキストエリアに自動入力する関数
-function inputToTextarea(text = "日本語でかボタン") {
-    appConsoleLog("inputToTextarea呼び出し");
-    const editableDiv = document.querySelector('#prompt-textarea');
-
-    if (editableDiv) {
-        appConsoleLog(editableDiv)
-
-        // 文字列をセット（既存のものを消す）
-        editableDiv.innerText = text;
-
-        // ChatGPTに反応させるには、inputイベントが必要な場合もある
-        editableDiv.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        appConsoleLog("editableDivに文字をセットしました７");
-        return true;
     }
-    appConsoleLog("editableDivが無かったです");
-    return false;
 }
 
 // 入力を消す関数
@@ -51,13 +29,71 @@ function sendQuestion(){
     const sendButton = document.querySelector('button[data-testid="send-button"]');
     appConsoleLog("質問を送信");
     sendButton.click();
+
+    // マイクがONならOFFにする
+    if(isMicOn()){
+      appConsoleLog("マイクがONだったので、OFFにした.");
+      const micButton = document.querySelector("#vc-record-button");
+      micButton.click();
+      setTimeout(updateBigMicButton, 300);
+    }
 }
 
-function appMicOn(){
+function appMicToggle(){
     const micButton = document.querySelector("#vc-record-button");
-    console.log(micButton);
-    appConsoleLog("マイクON");
-    micButton.click();
+    if(isMicOn()){
+      appConsoleLog("マイクは現在ONです（クリックしません）");
+      return;
+    }else{
+      appConsoleLog("マイクOFF -> ON");
+      micButton.click();
+      setTimeout(updateBigMicButton, 300);
+    }
+}
+
+function isMicOn(){
+    const micButton = document.querySelector("#vc-record-button");
+    if (!micButton) {
+        appConsoleLog("マイクボタンが見つかりません");
+        return false;
+    }
+
+    // マイクがONの状態を背景色の赤成分で判定
+    const bgColor = getComputedStyle(micButton).backgroundColor;
+    // "rgb(255, 0, 0)" のような形式を想定
+    const match = bgColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+    if (match) {
+        const red = parseInt(match[1], 10);
+        appConsoleLog(`マイクボタンの赤成分: ${red}`);
+        const isOn = red >= 240;
+        appConsoleLog(`マイクは${isOn ? "ON" : "OFF"}です`);
+        return isOn;
+    } else {
+        appConsoleLog("背景色の取得に失敗しました");
+        return false;
+    }
+}
+
+function updateBigMicButton() {
+    const button = document.getElementById("big-mic-button");
+    if (!button) return;
+    if (isMicOn()) {
+        button.innerText = "マイクはONです";
+        button.style.backgroundColor = "rgb(128,128,128)";
+    } else {
+        button.innerText = "マイクをONにする";
+        button.style.backgroundColor = "rgb(128,128,255)";
+    }
+}
+
+function focusBigMicButton() {
+    appConsoleLog("focusBigMicButton呼び出し");
+    setTimeout(updateBigMicButton, 300);
+}
+
+function blurBigMicButton() {
+    appConsoleLog("blurBigMicButton呼び出し");
+    setTimeout(updateBigMicButton, 300);
 }
 
 
@@ -83,7 +119,7 @@ function addInputButton() {
   button.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.3)";
 
   button.addEventListener("click", () => {
-    inputToTextarea();
+    debug_inputToTextarea();
   });
 
   document.body.appendChild(button);
@@ -172,9 +208,10 @@ function addBigMicButton() {
   button.style.alignItems = "center";
   button.style.justifyContent = "center";
 
-  button.addEventListener("click", appMicOn);
+  button.addEventListener("click", appMicToggle);
 
   document.body.appendChild(button);
+  updateBigMicButton(); // 初期表示
 }
 
 
@@ -190,6 +227,11 @@ window.addEventListener(
         addClearButton();
         addBigSendButton();
         addBigMicButton();
+
+        // フォーカスイベントでマイクボタンの状態を更新
+        editableDiv.addEventListener("focus", focusBigMicButton);
+        editableDiv.addEventListener("blur", blurBigMicButton);
+
         obs.disconnect();
         }
       }
